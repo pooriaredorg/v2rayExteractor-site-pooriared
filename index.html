@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V2Ray Extractor Pro</title>
+    <title>V2Ray Extractor Ultimate</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<body data-theme="dark">
 
     <div class="background-animation"></div>
 
     <div class="container">
         <header>
-            <div class="iran-flag-bar"></div>
-            <h1>V2Ray Extractor Pro</h1>
+            <h1>V2Ray Extractor Ultimate</h1>
             <p>استخراج، شخصی‌سازی و تست کانفیگ‌های V2Ray</p>
+            <button id="theme-toggle" title="تغییر تم">
+                <i class="fa-solid fa-moon"></i>
+            </button>
         </header>
 
         <nav class="menu">
-            <button class="menu-btn" data-type="mix">MIX</button>
-            <button class="menu-btn" data-type="vless">VLESS</button>
-            <button class="menu-btn" data-type="vmess">VMESS</button>
-            <button class="menu-btn" data-type="trojan">TROJAN</button>
-            <button class="menu-btn" data-type="ss">SS</button>
-            <button class="menu-btn" data-type="hy2">HY2</button>
+            <div class="btn-wrapper"><button class="menu-btn" data-type="mix">MIX</button></div>
+            <div class="btn-wrapper"><button class="menu-btn" data-type="vless">VLESS</button></div>
+            <div class="btn-wrapper"><button class="menu-btn" data-type="vmess">VMESS</button></div>
+            <div class="btn-wrapper"><button class="menu-btn" data-type="trojan">TROJAN</button></div>
+            <div class="btn-wrapper"><button class="menu-btn" data-type="ss">SS</button></div>
+            <div class="btn-wrapper"><button class="menu-btn" data-type="hy2">HY2</button></div>
         </nav>
 
         <main>
@@ -36,6 +38,7 @@
                 <button id="copy-all-btn" class="action-btn" disabled><i class="fa-solid fa-copy"></i> کپی همه (Base64)</button>
             </div>
             <div id="loader" class="loader" style="display: none;"></div>
+            <div id="status-message"></div>
             <div id="config-list-container">
                 </div>
         </main>
