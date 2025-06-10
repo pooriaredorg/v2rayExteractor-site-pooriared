@@ -3,22 +3,26 @@
     --bg-light: #e0e5ec;
     --text-light: #525865;
     --primary-light: #007BFF;
+    --primary-light-glow: rgba(0, 123, 255, 0.4);
     --shadow-light-1: #ffffff;
     --shadow-light-2: #a3b1c6;
     
     --bg-dark: #2a2e35;
     --text-dark: #c1c8d4;
     --primary-dark: #0d8eff;
+    --primary-dark-glow: rgba(13, 142, 255, 0.4);
     --shadow-dark-1: #353a42;
     --shadow-dark-2: #1f2228;
     
     --iran-green: #239f40;
+    --iran-white: #ffffff;
     --iran-red: #da0000;
 
     /* Applied Theme */
     --bg-color: var(--bg-light);
     --text-color: var(--text-light);
     --primary-color: var(--primary-light);
+    --primary-glow: var(--primary-light-glow);
     --shadow-1: var(--shadow-light-1);
     --shadow-2: var(--shadow-light-2);
     --card-bg: var(--bg-light);
@@ -28,15 +32,22 @@ body.dark-theme {
     --bg-color: var(--bg-dark);
     --text-color: var(--text-dark);
     --primary-color: var(--primary-dark);
+    --primary-glow: var(--primary-dark-glow);
     --shadow-1: var(--shadow-dark-1);
     --shadow-2: var(--shadow-dark-2);
     --card-bg: var(--bg-dark);
 }
 
-/* --- تنظیمات کلی --- */
-* {
-    box-sizing: border-box;
+/* --- انیمیشن جدید فوتر --- */
+@keyframes footer-glow {
+    0% { box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1); }
+    50% { box-shadow: 7px 7px 20px var(--shadow-2), -7px -7px 20px var(--shadow-1), 0 0 15px var(--primary-glow); }
+    100% { box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1); }
 }
+
+
+/* --- تنظیمات کلی --- */
+* { box-sizing: border-box; }
 
 body {
     background-color: var(--bg-color);
@@ -53,24 +64,30 @@ main {
     padding: 0 1rem;
 }
 
-/* --- هدر --- */
-.header-banner {
-    color: var(--text-color);
-    font-weight: 500;
+/* --- هدر و بنر پرچم --- */
+.main-header { padding-top: 1.5rem; }
+
+.iran-flag-banner {
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    background: linear-gradient(90deg, var(--iran-green) 0%, var(--iran-white) 50%, var(--iran-red) 100%);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin: 0 1rem 2rem 1rem;
     text-align: center;
-    padding: 8px;
-    font-size: 0.9rem;
 }
-.iran-flag-bar {
-    height: 3px;
-    background: linear-gradient(90deg, var(--iran-green) 0%, var(--bg-color) 50%, var(--iran-red) 100%);
-    margin-bottom: 8px;
-    border-radius: 3px;
+.iran-flag-banner h1 {
+    color: #000;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(255,255,255,0.7);
+    margin: 0;
 }
+body.dark-theme .iran-flag-banner { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+
 .header-content {
     position: relative;
     text-align: center;
-    padding: 2rem 0;
+    padding: 1rem 0 2rem 0;
 }
 .title-container h2 {
     font-size: 2rem;
@@ -84,10 +101,7 @@ main {
     margin: 0 0 10px 0;
     color: var(--primary-color);
 }
-.subtitle {
-    font-size: 1rem;
-    margin: 0;
-}
+.subtitle { font-size: 1rem; margin: 0; }
 
 /* --- دکمه‌های ناوبری --- */
 .sub-nav {
@@ -96,7 +110,6 @@ main {
     gap: 25px 20px;
     margin-bottom: 2.5rem;
 }
-
 .nav-btn {
     background: var(--card-bg);
     color: var(--text-color);
@@ -110,12 +123,10 @@ main {
     transition: all 0.2s ease-out;
     box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1);
 }
-
 .nav-btn:hover {
     color: var(--primary-color);
     box-shadow: 4px 4px 10px var(--shadow-2), -4px -4px 10px var(--shadow-1);
 }
-
 .nav-btn.active {
     color: var(--primary-color);
     box-shadow: inset 7px 7px 15px var(--shadow-2), inset -7px -7px 15px var(--shadow-1);
@@ -127,7 +138,7 @@ main {
     margin-bottom: 1.5rem;
 }
 #copy-all-btn {
-    display: none; /* Initially hidden */
+    display: none;
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -144,9 +155,7 @@ main {
     box-shadow: 5px 5px 12px var(--shadow-2), -5px -5px 12px var(--shadow-1);
     margin: 0 auto;
 }
-#copy-all-btn:hover {
-    color: var(--primary-color);
-}
+#copy-all-btn:hover { color: var(--primary-color); }
 #copy-all-btn.copied {
     color: var(--iran-green);
     box-shadow: inset 5px 5px 12px var(--shadow-2), inset -5px -5px 12px var(--shadow-1);
@@ -186,15 +195,9 @@ main {
     transition: background-color 0.2s ease;
     flex-shrink: 0;
 }
-.copy-btn:hover {
-    background-color: #0056b3;
-}
-body.dark-theme .copy-btn:hover {
-    background-color: #3a9dff;
-}
-.copy-btn.copied {
-    background-color: var(--iran-green);
-}
+body.dark-theme .copy-btn:hover { background-color: #3a9dff; }
+.copy-btn:hover { background-color: #0056b3; }
+.copy-btn.copied { background-color: var(--iran-green); }
 
 /* --- پیام‌ها و لودینگ --- */
 #message-area {
@@ -214,21 +217,41 @@ body.dark-theme .copy-btn:hover {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* --- فوتر --- */
+/* --- استایل جدید فوتر --- */
 .main-footer {
     text-align: center;
-    margin-top: 4rem;
-    padding: 2rem 1rem;
-    font-size: 0.9rem;
+    margin-top: 5rem;
+    padding: 3rem 1rem;
 }
-.main-footer a {
-    color: var(--text-color);
-    text-decoration: none;
+.footer-content {
+    background: var(--card-bg);
+    display: inline-block;
+    padding: 1.2rem 2rem;
+    border-radius: 20px;
+    animation: footer-glow 5s ease-in-out infinite;
+}
+.designer-name {
+    margin: 0 0 1rem 0;
     font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-color);
 }
-.main-footer a:hover {
-    color: var(--primary-color);
+.instagram-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
 }
+.instagram-link:hover { transform: scale(1.05); }
+.instagram-username {
+    color: var(--text-color);
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+.instagram-link:hover .instagram-username { color: #c13584; } /* رنگ صورتی اینستاگرام */
+.instagram-logo { width: 28px; height: 28px; }
 
 /* --- سوییچ تم --- */
 .theme-switcher-container {
@@ -242,38 +265,23 @@ body.dark-theme .copy-btn:hover {
     width: 34px;
     height: 34px;
 }
-.theme-switcher input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
+.theme-switcher input { opacity: 0; width: 0; height: 0; }
 .slider {
     position: absolute;
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     background-color: var(--bg-color);
     transition: .4s;
     border-radius: 50%;
     box-shadow: 3px 3px 6px var(--shadow-2), -3px -3px 6px var(--shadow-1);
 }
 .slider:before {
-    position: absolute;
-    content: "🌙";
-    font-size: 18px;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: .4s;
-    opacity: 1;
+    position: absolute; content: "🌙"; font-size: 18px;
+    height: 100%; width: 100%; display: flex;
+    align-items: center; justify-content: center;
+    transition: .4s; opacity: 1;
 }
-body.dark-theme .slider:before {
-    content: "☀️";
-}
+body.dark-theme .slider:before { content: "☀️"; }
 
 /* --- موبایل --- */
 @media (max-width: 600px) {
@@ -281,4 +289,6 @@ body.dark-theme .slider:before {
     .title-container h3 { font-size: 1.3rem; }
     .sub-nav { gap: 20px 15px; }
     .nav-btn { padding: 15px; }
+    .iran-flag-banner h1 { font-size: 1.3rem; }
+    .footer-content { padding: 1rem 1.5rem; }
 }
