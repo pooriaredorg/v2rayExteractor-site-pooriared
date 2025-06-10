@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateActionButtonsState();
 
         try {
-            // Using a more reliable CORS proxy
             const proxyUrl = 'https://api.cors.lol/raw?url=';
             const response = await fetch(proxyUrl + encodeURIComponent(url));
             
@@ -83,8 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const rawContent = await response.text();
             
-            // Check if the content is likely Base64 before decoding
-            // This is a simple check; a more robust one might be needed if issues persist
             if (rawContent.includes('<html')) {
                  throw new Error("محتوای دریافت شده یک فایل HTML است، نه رشته Base64.");
             }
@@ -97,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error("خطای atob: رشته دریافت شده به فرمت صحیح Base64 نیست.");
             }
 
-            const configs = decodedContent.split(/\r?\n/).filter(Boolean); // filter(Boolean) removes empty lines
+            const configs = decodedContent.split(/\r?\n/).filter(Boolean);
 
             currentConfigs = configs.map((config, index) => {
                 const hashIndex = config.indexOf('#');
@@ -115,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 displayConfigs(currentConfigs);
             }
             
-
         } catch (error) {
             console.error('خطای اصلی:', error);
             showStatus(error.message);
@@ -130,43 +126,51 @@ document.addEventListener('DOMContentLoaded', () => {
         configs.forEach(config => {
             const item = document.createElement('div');
             item.className = 'config-item';
-            item.dataset.configValue = config.value;
             item.innerHTML = `
                 <span class="config-name">${config.name}</span>
                 <span class="config-latency" id="latency-${config.name}">- ms</span>
                 <div class="config-actions">
-                    <button class="copy-single-btn" title="کپی کردن کانفیگ"><i class="fa-solid fa-paste"></i></button>
+                    <button class="copy-single-btn" title="کپی کردن کانفیگ" data-config-value="${config.value}"><i class="fa-solid fa-paste"></i></button>
                 </div>
             `;
             configListContainer.appendChild(item);
         });
         
-        document.querySelectorAll('.copy-single-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const configValue = e.currentTarget.closest('.config-item').dataset.configValue;
-                navigator.clipboard.writeText(configValue);
-                e.currentTarget.innerHTML = '<i class="fa-solid fa-check" style="color: var(--success-color);"></i>';
-                setTimeout(() => {
-                   e.currentTarget.innerHTML = '<i class="fa-solid fa-paste"></i>';
-                }, 2000);
-            });
+        configListContainer.addEventListener('click', function(e) {
+            const copyButton = e.target.closest('.copy-single-btn');
+            if (copyButton) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const configToCopy = copyButton.dataset.configValue;
+                
+                if (configToCopy) {
+                    navigator.clipboard.writeText(configToCopy).then(() => {
+                        copyButton.innerHTML = '<i class="fa-solid fa-check" style="color: var(--success-color);"></i>';
+                        setTimeout(() => {
+                           copyButton.innerHTML = '<i class="fa-solid fa-paste"></i>';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error("خطا در کپی کردن: ", err);
+                        alert("خطا در کپی کردن کانفیگ!");
+                    });
+                }
+            }
         });
     }
 
     // --- Latency Test Logic ---
     async function getLatency(address) {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
 
         const startTime = performance.now();
         try {
-            // We ping a known lightweight endpoint on the server address.
-            // Using a proxy to bypass browser CORS limitations for this test too.
             await fetch(`https://api.cors.lol/raw?url=https://${address}/cdn-cgi/trace`, { signal: controller.signal, method: 'HEAD' });
             const endTime = performance.now();
             return Math.round(endTime - startTime);
         } catch (error) {
-            return -1; // Indicate error/timeout
+            return -1;
         } finally {
             clearTimeout(timeoutId);
         }
@@ -183,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let address = '';
             try {
-                // Improved parsing for vless, vmess, trojan etc.
                 const urlPart = config.value.split('://')[1];
                 const atIndex = urlPart.indexOf('@');
                 address = urlPart.substring(atIndex + 1).split(/[:?#]/)[0];
