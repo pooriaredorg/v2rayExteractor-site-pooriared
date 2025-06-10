@@ -3,36 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V2Ray Remixer - PooriaRed</title>
-    <meta name="description" content="شخصی‌سازی و دریافت لینک‌های ساب V2Ray با نام‌های اختصاصی">
-    <link rel="stylesheet" href="style.css">
+    <title>V2Ray Link Copier - PooriaRed</title>
+    <meta name="description" content="کپی مستقیم لینک‌های ساب V2Ray">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- تمام استایل‌ها در اینجا قرار دارند --- */
+        :root {
+            --bg-light: #e0e5ec;
+            --text-light: #525865;
+            --primary-light: #007BFF;
+            --primary-light-glow: rgba(0, 123, 255, 0.4);
+            --shadow-light-1: #ffffff;
+            --shadow-light-2: #a3b1c6;
+            --bg-dark: #2a2e35;
+            --text-dark: #c1c8d4;
+            --primary-dark: #0d8eff;
+            --primary-dark-glow: rgba(13, 142, 255, 0.4);
+            --shadow-dark-1: #353a42;
+            --shadow-dark-2: #1f2228;
+            --iran-green: #239f40;
+            --iran-white: #ffffff;
+            --iran-red: #da0000;
+            --success-color: #28a745;
+            --success-color-glow: rgba(40, 167, 69, 0.5);
+            --bg-color: var(--bg-light);
+            --text-color: var(--text-light);
+            --primary-color: var(--primary-light);
+            --primary-glow: var(--primary-light-glow);
+            --shadow-1: var(--shadow-light-1);
+            --shadow-2: var(--shadow-light-2);
+            --card-bg: var(--bg-light);
+        }
+        body.dark-theme {
+            --bg-color: var(--bg-dark);
+            --text-color: var(--text-dark);
+            --primary-color: var(--primary-dark);
+            --primary-glow: var(--primary-dark-glow);
+            --shadow-1: var(--shadow-dark-1);
+            --shadow-2: var(--shadow-dark-2);
+            --card-bg: var(--bg-dark);
+        }
+        @keyframes footer-glow {
+            0% { box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1); }
+            50% { box-shadow: 7px 7px 20px var(--shadow-2), -7px -7px 20px var(--shadow-1), 0 0 15px var(--primary-glow); }
+            100% { box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1); }
+        }
+        @keyframes success-glow-pulse {
+            0% { box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1), 0 0 0px var(--success-color-glow); }
+            50% { box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1), 0 0 20px 5px var(--success-color-glow); }
+            100% { box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1), 0 0 0px var(--success-color-glow); }
+        }
+        * { box-sizing: border-box; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Vazirmatn', sans-serif; transition: background-color 0.3s ease, color 0.3s ease; margin: 0; text-align: right; display: flex; flex-direction: column; min-height: 100vh; }
+        main { max-width: 600px; width: 100%; margin: 0 auto; padding: 1rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .main-header { padding-top: 1.5rem; }
+        .iran-flag-banner { padding: 1rem 1.5rem; border-radius: 12px; background: linear-gradient(90deg, var(--iran-green) 0%, var(--iran-white) 50%, var(--iran-red) 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 0 1rem 1.5rem 1rem; text-align: center; }
+        .iran-flag-banner h1 { color: #000; font-size: 1.5rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(255,255,255,0.7); margin: 0; }
+        body.dark-theme .iran-flag-banner { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .header-content { position: relative; text-align: center; padding: 1rem 0; }
+        .title-container h2 { font-size: 2rem; font-weight: 800; margin: 0; color: var(--text-color); }
+        .title-container h3 { font-size: 1.5rem; font-weight: 500; margin: 0 0 10px 0; color: var(--primary-color); }
+        .subtitle { font-size: 1rem; margin: 0; }
+        .section-title { font-size: 1.2rem; text-align: center; font-weight: 700; margin: 2rem 0 1.5rem 0; color: var(--text-color); }
+        .sub-nav, .flag-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 25px 20px; margin-top: 1rem; }
+        .nav-btn { background: var(--card-bg); color: var(--text-color); border: none; padding: 18px; font-family: 'Vazirmatn', sans-serif; font-size: 1rem; font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.2s ease-out; box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1); min-height: 60px; }
+        .nav-btn:hover:not(:disabled), .flag-btn:hover:not(:disabled) { transform: translateY(-5px); box-shadow: 7px 12px 20px var(--shadow-2), -7px -12px 20px var(--shadow-1); }
+        .nav-btn.copied, .flag-btn.copied { animation: success-glow-pulse 0.8s ease-out; cursor: default; }
+        .nav-btn:disabled, .flag-btn:disabled { cursor: default; }
+        .flag-btn { border: none; padding: 0; overflow: hidden; display: flex; flex-direction: column; background: var(--card-bg); font-family: 'Vazirmatn', sans-serif; border-radius: 12px; cursor: pointer; transition: all 0.2s ease-out; box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1); }
+        .flag-img-container { width: 100%; height: 90px; }
+        .flag-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .flag-label { padding: 12px 10px; text-align: center; font-weight: 700; font-size: 1rem; color: var(--text-color); }
+        #message-area { text-align: center; padding: 1rem; margin-top: 1.5rem; min-height: 50px; font-weight: 500; }
+        .main-footer { text-align: center; padding: 2rem 1rem 1.5rem 1rem; }
+        .footer-content { background: var(--card-bg); display: inline-block; padding: 1.2rem 2rem; border-radius: 20px; animation: footer-glow 5s ease-in-out infinite; }
+        .designer-name { margin: 0 0 1rem 0; font-weight: 500; font-size: 1rem; color: var(--text-color); }
+        .instagram-link, .telegram-link { display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; transition: transform 0.3s ease; }
+        .instagram-link { margin-bottom: 0.7rem; }
+        .instagram-link:hover, .telegram-link:hover { transform: scale(1.05); }
+        .instagram-username { color: var(--text-color); font-weight: 700; font-size: 1.1rem; transition: color 0.3s ease; }
+        .telegram-username { color: var(--text-color); font-weight: 500; font-size: 1rem; transition: color 0.3s ease; }
+        .instagram-link:hover .instagram-username, .telegram-link:hover .telegram-username { color: var(--primary-color); }
+        .instagram-logo, .telegram-logo { width: 24px; height: 24px; }
+        .theme-switcher-container { position: absolute; top: 0; left: 1rem; }
+        .theme-switcher { position: relative; display: inline-block; width: 34px; height: 34px; }
+        .theme-switcher input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-color); transition: .4s; border-radius: 50%; box-shadow: 3px 3px 6px var(--shadow-2), -3px -3px 6px var(--shadow-1); }
+        .slider:before { position: absolute; content: "🌙"; font-size: 18px; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; transition: .4s; opacity: 1; }
+        body.dark-theme .slider:before { content: "☀️"; }
+    </style>
 </head>
 <body>
-
     <header class="main-header">
-        <div class="iran-flag-banner">
-            <h1>به امید ایرانی آزاد</h1>
-        </div>
-
+        <div class="iran-flag-banner"><h1>به امید ایرانی آزاد</h1></div>
         <div class="header-content">
-            <div class="theme-switcher-container">
-                <label class="theme-switcher">
-                    <input type="checkbox" id="theme-toggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="title-container">
-                <h2>V2Ray Extractor</h2>
-                <h3>Ultimate</h3>
-                <p class="subtitle">استخراج و شخصی‌سازی کانفیگ‌های V2Ray</p>
-            </div>
+            <div class="theme-switcher-container"><label class="theme-switcher"><input type="checkbox" id="theme-toggle"><span class="slider"></span></label></div>
+            <div class="title-container"><h2>V2Ray Extractor</h2><h3>Ultimate</h3><p class="subtitle">استخراج و شخصی‌سازی کانفیگ‌های V2Ray</p></div>
         </div>
     </header>
-
     <main>
+        <h2 class="section-title">سرویس‌های عمومی</h2>
         <nav class="sub-nav">
             <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/mix/sub.html">MIX</button>
             <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html">VLESS</button>
@@ -40,35 +112,112 @@
             <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html">TROJAN</button>
             <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html">SS</button>
             <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/hy2.html">HY2</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/4n0nymou3/auto-warp-config/refs/heads/main/config.txt#Anonymous">WARP PRO</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/refs/heads/main/configs/proxy_configs.txt">MIX PRO</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/iPsycho1/multi-proxy-config-fetcher/refs/heads/main/configs/proxy_configs.txt">MIX 3</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/Rayan-Config/C-Sub/refs/heads/main/configs/proxy.txt">MIX 4</button>
         </nav>
-        
-        <div id="loading" class="loading-spinner" style="display: none;"></div>
+
+        <h2 class="section-title">بر اساس لوکیشن</h2>
+        <nav class="flag-nav">
+            <button class="flag-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/main/loc/DE%20%F0%9F%87%A9%F0%9F%87%AA.txt" data-name="آلمان">
+                <div class="flag-img-container"><img src="https://flagcdn.com/w160/de.png" alt="پرچم آلمان"></div>
+                <div class="flag-label">آلمان / DE</div>
+            </button>
+            <button class="flag-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/main/loc/NL%20%F0%9F%87%B3%F0%9F%87%B1.txt" data-name="هلند">
+                <div class="flag-img-container"><img src="https://flagcdn.com/w160/nl.png" alt="پرچم هلند"></div>
+                <div class="flag-label">هلند / NL</div>
+            </button>
+            <button class="flag-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/main/loc/US%20%F0%9F%87%BA%F0%9F%87%B8.txt" data-name="آمریکا">
+                <div class="flag-img-container"><img src="https://flagcdn.com/w160/us.png" alt="پرچم آمریکا"></div>
+                <div class="flag-label">آمریکا / US</div>
+            </button>
+            <button class="flag-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/main/loc/FR%20%F0%9F%87%AB%F0%9F%87%B7.txt" data-name="فرانسه">
+                <div class="flag-img-container"><img src="https://flagcdn.com/w160/fr.png" alt="پرچم فرانسه"></div>
+                <div class="flag-label">فرانسه / FR</div>
+            </button>
+            <button class="flag-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/main/loc/GB%20%F0%9F%87%AC%F0%9F%87%A7.txt" data-name="بریتانیا">
+                <div class="flag-img-container"><img src="https://flagcdn.com/w160/gb.png" alt="پرچم بریتانیا"></div>
+                <div class="flag-label">بریتانیا / GB</div>
+            </button>
+        </nav>
         <div id="message-area"></div>
-        
-        <div id="result-container" class="result-box" style="display: none;">
-            <textarea id="result-link" readonly></textarea>
-            <button id="final-copy-btn">کپی لینک</button>
-        </div>
     </main>
 
     <footer class="main-footer">
         <div class="footer-content">
-            <p class="designer-name">طراح سایت: پوریا عبدالله نژاد</p>
+            <p class="designer-name">طراحی و توسعه: پوریا عبدالله نژاد</p>
             <a class="instagram-link" href="https://www.instagram.com/pooria_abdollahnezhad" target="_blank">
-                <svg class="instagram-logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="url(#insta-gradient)">
-                    <defs>
-                      <radialGradient id="insta-gradient" cx="0.3" cy="1" r="1">
-                        <stop offset="0" stop-color="#FFD600"/>
-                        <stop offset="0.5" stop-color="#FF7A00"/>
-                        <stop offset="1" stop-color="#FF0169"/>
-                      </radialGradient>
-                    </defs>
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zm0 1.802C9.04 3.965 8.709 3.974 7.436 4.03c-2.924.135-4.14 1.353-4.276 4.276-.057 1.273-.066 1.603-.066 4.694s.009 3.42.066 4.694c.137 2.923 1.353 4.14 4.276 4.276 1.273.057 1.604.066 4.564.066s3.291-.009 4.564-.066c2.923-.136 4.14-1.353 4.276-4.276.057-1.273.066-1.604.066-4.694s-.009-3.42-.066-4.694c-.136-2.922-1.353-4.14-4.276-4.276-1.272-.057-1.603-.066-4.564-.066zM12 6.837c-2.843 0-5.153 2.31-5.153 5.153s2.31 5.153 5.153 5.153 5.153-2.31 5.153-5.153S14.843 6.837 12 6.837zm0 8.508c-1.85 0-3.355-1.505-3.355-3.355s1.505-3.355 3.355-3.355 3.355 1.505 3.355 3.355-1.505 3.355-3.355 3.355zm5.353-7.424c-.606 0-1.097.492-1.097 1.097s.491 1.097 1.097 1.097c.605 0 1.097-.492 1.097-1.097s-.492-1.097-1.097-1.097z"/>
-                </svg>
+                <svg class="instagram-logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="url(#insta-gradient)"><defs><radialGradient id="insta-gradient" cx="0.3" cy="1" r="1"><stop offset="0" stop-color="#FFD600"/><stop offset="0.5" stop-color="#FF7A00"/><stop offset="1" stop-color="#FF0169"/></radialGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zm0 1.802C9.04 3.965 8.709 3.974 7.436 4.03c-2.924.135-4.14 1.353-4.276 4.276-.057 1.273-.066 1.603-.066 4.694s.009 3.42.066 4.694c.137 2.923 1.353 4.14 4.276 4.276 1.273.057 1.604.066 4.564.066s3.291-.009 4.564-.066c2.923-.136 4.14-1.353 4.276-4.276.057-1.273.066-1.604.066-4.694s-.009-3.42-.066-4.694c-.136-2.922-1.353-4.14-4.276-4.276-1.272-.057-1.603-.066-4.564-.066zM12 6.837c-2.843 0-5.153 2.31-5.153 5.153s2.31 5.153 5.153 5.153 5.153-2.31 5.153-5.153S14.843 6.837 12 6.837zm0 8.508c-1.85 0-3.355-1.505-3.355-3.355s1.505-3.355 3.355-3.355 3.355 1.505 3.355 3.355-1.505 3.355-3.355 3.355zm5.353-7.424c-.606 0-1.097.492-1.097 1.097s.491 1.097 1.097 1.097c.605 0 1.097-.492 1.097-1.097s-.492-1.097-1.097-1.097z"/></svg>
                 <span class="instagram-username">pooria_abdollahnezhad</span>
+            </a>
+            <a class="telegram-link" href="https://t.me/REDFREE8" target="_blank">
+                <svg class="telegram-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#29A9EA">
+                    <path fill-rule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-3.36-9.124l7.92-3.61c.88-.4 1.22.28.98.88l-2.48 7.89c-.19.6-.6.75-1.08.48l-2.55-1.88-1.23 1.18c-.26.25-.48.37-.8.37l.18-2.6 5.05-4.55c.23-.21-.05-.33-.36-.12l-6.23 3.9c-.6.37-1.03.18-1.2-.4L6.1 13.26c-.25-.8.33-1.15 1.02-1.04l2.52.32z" clip-rule="evenodd"/>
+                </svg>
+                <span class="telegram-username">REDFREE8</span>
             </a>
         </div>
     </footer>
-    <script src="script.js"></script>
+
+    <script>
+        // --- تمام کدهای جاوا اسکریپت در اینجا قرار دارند ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const allButtons = document.querySelectorAll('.nav-btn, .flag-btn');
+            const messageArea = document.getElementById('message-area');
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            // مدیریت تم
+            const applyTheme = (theme) => {
+                body.classList.toggle('dark-theme', theme === 'dark');
+                themeToggle.checked = (theme === 'dark');
+            };
+            themeToggle.addEventListener('change', () => {
+                const selectedTheme = themeToggle.checked ? 'dark' : 'light';
+                localStorage.setItem('theme', selectedTheme);
+                applyTheme(selectedTheme);
+            });
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+
+            // نمایش پیام
+            function showMessage(text, isError = false) {
+                const color = isError ? 'var(--iran-red)' : 'var(--success-color)';
+                messageArea.innerHTML = `<p style="color: ${color}; font-weight: bold;">${text}</p>`;
+            }
+
+            // عملکرد دکمه‌ها
+            allButtons.forEach(button => {
+                const buttonName = button.dataset.name || button.textContent.trim();
+                
+                button.addEventListener('click', () => {
+                    if (button.classList.contains('copied')) return;
+
+                    const urlToCopy = button.dataset.url;
+
+                    if (urlToCopy) {
+                        navigator.clipboard.writeText(urlToCopy).then(() => {
+                            showMessage(`آدرس لینک ${buttonName} با موفقیت کپی شد!`, false);
+                            button.classList.add('copied');
+                            if(button.classList.contains('nav-btn')) {
+                                button.textContent = 'کپی شد!';
+                            }
+
+                            setTimeout(() => {
+                                button.classList.remove('copied');
+                                if(button.classList.contains('nav-btn')) {
+                                    button.textContent = buttonName;
+                                }
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Copy failed', err);
+                            showMessage('خطا در کپی کردن. لطفا دوباره تلاش کنید.', true);
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
