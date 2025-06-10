@@ -5,9 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     
-    // پراکسی جدید و پایدار
+    // پراکسی پایدار
     const CORS_PROXY = 'https://api.codetabs.com/v1/proxy?quest=';
     
+    // --- توابع کمکی برای کار با کاراکترهای خاص و ایموجی (UTF-8) ---
+    function btoa_utf8(str) {
+        return btoa(unescape(encodeURIComponent(str)));
+    }
+
+    function atob_utf8(str) {
+        return decodeURIComponent(escape(atob(str)));
+    }
+
     // --- مدیریت تم ---
     const applyTheme = (theme) => {
         body.classList.toggle('dark-theme', theme === 'dark');
@@ -30,27 +39,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- افزودن Event Listener به دکمه‌ها ---
     navButtons.forEach(button => {
-        const originalText = button.textContent;
         button.addEventListener('click', () => {
-            processAndCopySubscription(button, originalText);
+            processAndCopySubscription(button);
         });
     });
 
     // --- تابع اصلی برای پردازش و کپی لینک ساب ---
-    async function processAndCopySubscription(button, originalText) {
-        // غیرفعال کردن همه دکمه‌ها و نمایش حالت لودینگ
+    async function processAndCopySubscription(button) {
+        const originalText = button.textContent;
         navButtons.forEach(btn => {
             btn.disabled = true;
-            if (btn === button) {
-                btn.textContent = 'در حال آماده‌سازی...';
-            }
+            if (btn === button) btn.textContent = 'در حال آماده‌سازی...';
         });
         messageArea.innerHTML = '';
         
         const url = button.dataset.url;
         let base64Data;
         
-        // مرحله ۱: دریافت اطلاعات
         try {
             const response = await fetch(CORS_PROXY + url);
             if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
@@ -63,22 +68,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // مرحله ۲: پردازش و شخصی‌سازی
         try {
-            const decodedData = atob(base64Data);
+            const decodedData = atob_utf8(base64Data); // استفاده از تابع جدید
             const configs = decodedData.split(/\r?\n/).filter(line => line.trim() !== '');
             
             const personalizedConfigs = configs.map((config, index) => {
                 const newName = `pooriared${index + 1}`;
                 return config.includes('#') 
-                    ? config.substring(0, config.indexOf('#') + 1) + newName 
-                    : `${config}#${newName}`;
+                    ? config.substring(0, config.indexOf('#') + 1) + encodeURIComponent(newName)
+                    : `${config}#${encodeURIComponent(newName)}`;
             });
             
             const newSubContent = personalizedConfigs.join('\n');
-            const newSubBase64 = btoa(newSubContent);
+            const newSubBase64 = btoa_utf8(newSubContent); // استفاده از تابع جدید
 
-            // مرحله ۳: کپی در کلیپ‌بورد
             await navigator.clipboard.writeText(newSubBase64);
             
             button.classList.add('copied');
@@ -90,22 +93,23 @@ document.addEventListener('DOMContentLoaded', () => {
             showMessage("خطا در پردازش یا کپی. ممکن است محتوای لینک ساب استاندارد نباشد.");
         }
 
-        // مرحله ۴: بازگرداندن دکمه‌ها به حالت اولیه
         setTimeout(() => {
-            resetButtons();
             button.classList.remove('copied');
+            resetButtons(originalText);
         }, 2500);
     }
     
     function resetButtons() {
         navButtons.forEach(btn => {
             btn.disabled = false;
-            // پیدا کردن متن اصلی دکمه از یک منبع ثابت یا بازنویسی آن
+            // پیدا کردن متن اصلی دکمه از یک منبع ثابت
             const buttonType = btn.getAttribute('data-url').match(/([^/]+)\.html/);
-            if (buttonType && buttonType[1] === 'sub') {
-                 btn.textContent = "MIX";
-            } else if (buttonType) {
-                 btn.textContent = buttonType[1].toUpperCase();
+            if (buttonType) {
+                 const name = buttonType[1];
+                 if (name === 'sub') btn.textContent = "MIX";
+                 else if (name === 'ss') btn.textContent = "SS";
+                 else if (name === 'hy2') btn.textContent = "HY2";
+                 else btn.textContent = name.toUpperCase();
             }
         });
     }
