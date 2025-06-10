@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V2Ray Extractor - PooriaRed</title>
-    <meta name="description" content="استخراج و شخصی‌سازی کانفیگ‌های V2Ray با نام‌های اختصاصی">
+    <title>V2Ray Remixer - PooriaRed</title>
+    <meta name="description" content="شخصی‌سازی و دریافت لینک‌های ساب V2Ray با نام‌های اختصاصی">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,29 +34,16 @@
 
     <main>
         <nav class="sub-nav">
-            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html">VLESS</button>
             <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/mix/sub.html">MIX</button>
-            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html">TROJAN</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html">VLESS</button>
             <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vmess.html">VMESS</button>
-            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/hy2.html">HY2</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html">TROJAN</button>
             <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html">SS</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/hy2.html">HY2</button>
         </nav>
         
-        <div class="actions-container">
-            <button id="copy-all-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zM-1 7a.5.5 0 0 1 .5-.5h15a.5.5 0 0 1 0 1H-.5A.5.5 0 0 1-1 7z"/>
-                </svg>
-                <span>کپی همه (Base64)</span>
-            </button>
-        </div>
-
         <div id="loading" class="loading-spinner" style="display: none;"></div>
-        
         <div id="message-area"></div>
-
-        <section id="configs-container" class="configs-section"></section>
     </main>
 
     <footer class="main-footer">
