@@ -25,8 +25,8 @@ body[data-theme='dark'] {
 
 body[data-theme='light'] {
     --bg-color: #f0f2f5;
-    --primary-color: rgba(255, 255, 255, 0.6);
-    --secondary-color: rgba(240, 242, 245, 0.7);
+    --primary-color: rgba(255, 255, 255, 0.7);
+    --secondary-color: rgba(240, 242, 245, 0.8);
     --border-color: rgba(0, 0, 0, 0.1);
     --text-color: #1c1e21;
     --text-secondary: #65676b;
@@ -93,7 +93,7 @@ body {
 }
 
 .freedom-banner {
-    padding: 1px; /* Creates space for the border */
+    padding: 1px;
     border-radius: 10px;
     margin: -10px auto 25px auto;
     background: linear-gradient(to left, var(--iran-green), var(--iran-white), var(--iran-red));
@@ -137,7 +137,7 @@ header p {
 #theme-toggle {
     position: absolute;
     top: 15px;
-    left: 15px;
+    left: 10px; /* موقعیت جدید */
     background: var(--secondary-color);
     border: 1px solid var(--border-color);
     color: var(--text-color);
@@ -275,6 +275,12 @@ header p {
     color: var(--danger-color);
     border: 1px solid var(--danger-color);
 }
+#status-message.warning {
+    background-color: rgba(210, 153, 34, 0.2);
+    color: var(--warning-color);
+    border: 1px solid var(--warning-color);
+}
+
 
 #config-list-container {
     display: flex;
@@ -310,20 +316,6 @@ header p {
     font-size: 1.1em;
     flex-grow: 1;
 }
-
-.config-latency {
-    font-family: monospace;
-    font-size: 1.1em;
-    margin: 0 20px;
-    padding: 5px 10px;
-    border-radius: 6px;
-    min-width: 80px;
-    text-align: center;
-}
-.config-latency.fast { color: var(--success-color); }
-.config-latency.medium { color: var(--warning-color); }
-.config-latency.slow { color: var(--danger-color); }
-.config-latency.testing { color: var(--accent-color); }
 
 .config-actions button {
     background: transparent;
