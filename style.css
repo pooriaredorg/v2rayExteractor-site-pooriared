@@ -1,250 +1,252 @@
 /* --- ریشه‌ها و متغیرهای رنگی --- */
 :root {
-    --bg-color-light: #f4f7f6;
-    --text-color-light: #1a1a1a;
-    --card-bg-light: #ffffff;
-    --primary-color-light: #007bff;
-    --primary-hover-light: #0056b3;
-    --border-color-light: #e0e0e0;
+    --bg-light: #e0e5ec;
+    --text-light: #525865;
+    --primary-light: #007BFF;
+    --shadow-light-1: #ffffff;
+    --shadow-light-2: #a3b1c6;
+    
+    --bg-dark: #2a2e35;
+    --text-dark: #c1c8d4;
+    --primary-dark: #0d8eff;
+    --shadow-dark-1: #353a42;
+    --shadow-dark-2: #1f2228;
+    
     --iran-green: #239f40;
-    --iran-white: #ffffff;
     --iran-red: #da0000;
 
-    --bg-color-dark: #121212;
-    --text-color-dark: #e0e0e0;
-    --card-bg-dark: #1e1e1e;
-    --primary-color-dark: #0d8eff;
-    --primary-hover-dark: #3a9dff;
-    --border-color-dark: #333333;
-}
-
-/* --- تنظیمات تم --- */
-body {
-    background-color: var(--bg-color-light);
-    color: var(--text-color-light);
-    font-family: 'Vazirmatn', sans-serif;
-    transition: background-color 0.4s ease, color 0.4s ease;
-    margin: 0;
-    padding: 0;
-    text-align: right;
+    /* Applied Theme */
+    --bg-color: var(--bg-light);
+    --text-color: var(--text-light);
+    --primary-color: var(--primary-light);
+    --shadow-1: var(--shadow-light-1);
+    --shadow-2: var(--shadow-light-2);
+    --card-bg: var(--bg-light);
 }
 
 body.dark-theme {
-    --bg-color-light: var(--bg-color-dark);
-    --text-color-light: var(--text-color-dark);
-    --card-bg-light: var(--card-bg-dark);
-    --primary-color-light: var(--primary-color-dark);
-    --primary-hover-light: var(--primary-hover-dark);
-    --border-color-light: var(--border-color-dark);
+    --bg-color: var(--bg-dark);
+    --text-color: var(--text-dark);
+    --primary-color: var(--primary-dark);
+    --shadow-1: var(--shadow-dark-1);
+    --shadow-2: var(--shadow-dark-2);
+    --card-bg: var(--bg-dark);
 }
 
-/* --- انیمیشن‌ها --- */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+/* --- تنظیمات کلی --- */
+* {
+    box-sizing: border-box;
 }
 
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5); }
-    70% { box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Vazirmatn', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0;
+    text-align: right;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* --- ساختار کلی --- */
 main {
-    max-width: 900px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
+    max-width: 600px;
+    margin: 1rem auto;
+    padding: 0 1rem;
 }
 
-/* --- هدر و بنر --- */
-.main-header {
-    padding: 1.5rem 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
+/* --- هدر --- */
 .header-banner {
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    background: linear-gradient(90deg, var(--iran-green) 0%, var(--iran-white) 50%, var(--iran-red) 100%);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    animation: fadeIn 1s ease-out;
+    color: var(--text-color);
+    font-weight: 500;
+    text-align: center;
+    padding: 8px;
+    font-size: 0.9rem;
 }
-
-.header-title {
-    color: #000;
-    font-size: 1.8rem;
-    font-weight: 700;
-    text-shadow: 1px 1px 3px rgba(255,255,255,0.7);
+.iran-flag-bar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--iran-green) 0%, var(--bg-color) 50%, var(--iran-red) 100%);
+    margin-bottom: 8px;
+    border-radius: 3px;
+}
+.header-content {
+    position: relative;
+    text-align: center;
+    padding: 2rem 0;
+}
+.title-container h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-color);
+}
+.title-container h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0 0 10px 0;
+    color: var(--primary-color);
+}
+.subtitle {
+    font-size: 1rem;
     margin: 0;
 }
 
-/* --- منوی ناوبری (دکمه‌های ساب) --- */
+/* --- دکمه‌های ناوبری --- */
 .sub-nav {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px 20px;
     margin-bottom: 2.5rem;
-    animation: fadeIn 1.2s ease-out;
 }
 
 .nav-btn {
-    background-color: var(--card-bg-light);
-    color: var(--primary-color-light);
-    border: 2px solid var(--primary-color-light);
-    padding: 12px 25px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: none;
+    padding: 18px;
     font-family: 'Vazirmatn', sans-serif;
     font-size: 1rem;
-    font-weight: 500;
-    border-radius: 50px;
+    font-weight: 700;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s ease-out;
+    box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1);
 }
 
 .nav-btn:hover {
-    background-color: var(--primary-color-light);
-    color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+    color: var(--primary-color);
+    box-shadow: 4px 4px 10px var(--shadow-2), -4px -4px 10px var(--shadow-1);
 }
 
 .nav-btn.active {
-    background-color: var(--primary-color-light);
-    color: white;
-    animation: pulse 1.5s infinite;
+    color: var(--primary-color);
+    box-shadow: inset 7px 7px 15px var(--shadow-2), inset -7px -7px 15px var(--shadow-1);
 }
 
-/* --- بخش نمایش کانفیگ‌ها --- */
+/* --- دکمه کپی همه --- */
+.actions-container {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+#copy-all-btn {
+    display: none; /* Initially hidden */
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: none;
+    padding: 12px 25px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    box-shadow: 5px 5px 12px var(--shadow-2), -5px -5px 12px var(--shadow-1);
+    margin: 0 auto;
+}
+#copy-all-btn:hover {
+    color: var(--primary-color);
+}
+#copy-all-btn.copied {
+    color: var(--iran-green);
+    box-shadow: inset 5px 5px 12px var(--shadow-2), inset -5px -5px 12px var(--shadow-1);
+}
+
+/* --- بخش کانفیگ‌ها --- */
 .configs-section {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
-
 .config-item {
     display: flex;
     align-items: center;
-    background-color: var(--card-bg-light);
-    border: 1px solid var(--border-color-light);
-    border-right: 5px solid var(--primary-color-light);
-    padding: 15px;
+    background: var(--card-bg);
+    padding: 12px 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    animation: fadeIn 0.5s ease-out;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 4px 4px 8px var(--shadow-2), -4px -4px 8px var(--shadow-1);
+    direction: ltr;
 }
-
-.config-item:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
 .config-text {
     flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    direction: ltr;
-    text-align: left;
-    margin-left: 15px;
-    font-size: 0.95rem;
+    margin-right: 15px;
+    font-size: 0.9rem;
 }
-
 .copy-btn {
-    background-color: transparent;
-    border: 1px solid var(--primary-color-light);
-    color: var(--primary-color-light);
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
     padding: 8px 16px;
     font-family: 'Vazirmatn', sans-serif;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.2s ease;
     flex-shrink: 0;
 }
-
 .copy-btn:hover {
-    background-color: var(--primary-color-light);
-    color: #fff;
+    background-color: #0056b3;
 }
-
+body.dark-theme .copy-btn:hover {
+    background-color: #3a9dff;
+}
 .copy-btn.copied {
     background-color: var(--iran-green);
-    border-color: var(--iran-green);
-    color: white;
 }
 
-/* --- اسپینر لودینگ --- */
+/* --- پیام‌ها و لودینگ --- */
+#message-area {
+    text-align: center;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
 .loading-spinner {
-    border: 5px solid var(--border-color-light);
-    border-top: 5px solid var(--primary-color-light);
+    border: 5px solid var(--shadow-2);
+    border-top: 5px solid var(--primary-color);
     border-radius: 50%;
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
     margin: 3rem auto;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* --- فوتر --- */
 .main-footer {
     text-align: center;
     margin-top: 4rem;
-    padding: 2rem;
-    border-top: 1px solid var(--border-color-light);
-    color: #777;
+    padding: 2rem 1rem;
     font-size: 0.9rem;
 }
-body.dark-theme .main-footer {
-    color: #888;
-}
-
-.main-footer p {
-    margin: 0 0 10px 0;
-}
-
 .main-footer a {
-    color: var(--text-color-light);
+    color: var(--text-color);
     text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: color 0.3s ease;
+    font-weight: 500;
 }
-
 .main-footer a:hover {
-    color: var(--primary-color-light);
+    color: var(--primary-color);
 }
-
 
 /* --- سوییچ تم --- */
 .theme-switcher-container {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 1rem;
 }
-
 .theme-switcher {
     position: relative;
     display: inline-block;
-    width: 60px;
+    width: 34px;
     height: 34px;
 }
-
 .theme-switcher input {
     opacity: 0;
     width: 0;
     height: 0;
 }
-
 .slider {
     position: absolute;
     cursor: pointer;
@@ -252,74 +254,31 @@ body.dark-theme .main-footer {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 5px;
-}
-.slider svg {
-    color: #fff;
-    transition: opacity 0.4s ease;
-}
-.slider .bi-sun-fill { opacity: 1; }
-.slider .bi-moon-fill { opacity: 0; }
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
+    background-color: var(--bg-color);
     transition: .4s;
     border-radius: 50%;
+    box-shadow: 3px 3px 6px var(--shadow-2), -3px -3px 6px var(--shadow-1);
+}
+.slider:before {
+    position: absolute;
+    content: "🌙";
+    font-size: 18px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .4s;
+    opacity: 1;
+}
+body.dark-theme .slider:before {
+    content: "☀️";
 }
 
-input:checked + .slider {
-    background-color: var(--primary-color-dark);
-}
-
-input:checked + .slider .bi-sun-fill { opacity: 0; }
-input:checked + .slider .bi-moon-fill { opacity: 1; }
-
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
-
-/* --- طراحی واکنش‌گرا (موبایل) --- */
+/* --- موبایل --- */
 @media (max-width: 600px) {
-    .header-title {
-        font-size: 1.4rem;
-    }
-    
-    .config-item {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
-    
-    .config-text {
-        margin-left: 0;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-
-    .copy-btn {
-        width: 100%;
-        text-align: center;
-    }
-
-    .sub-nav {
-        gap: 10px;
-    }
-
-    .nav-btn {
-        padding: 10px 18px;
-        font-size: 0.9rem;
-    }
+    .title-container h2 { font-size: 1.8rem; }
+    .title-container h3 { font-size: 1.3rem; }
+    .sub-nav { gap: 20px 15px; }
+    .nav-btn { padding: 15px; }
 }
