@@ -17,6 +17,7 @@
     --iran-green: #239f40;
     --iran-white: #ffffff;
     --iran-red: #da0000;
+    --success-color: #28a745;
 
     /* Applied Theme */
     --bg-color: var(--bg-light);
@@ -38,15 +39,15 @@ body.dark-theme {
     --card-bg: var(--bg-dark);
 }
 
-/* --- انیمیشن جدید فوتر --- */
 @keyframes footer-glow {
     0% { box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1); }
     50% { box-shadow: 7px 7px 20px var(--shadow-2), -7px -7px 20px var(--shadow-1), 0 0 15px var(--primary-glow); }
     100% { box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1); }
 }
 
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* --- تنظیمات کلی --- */
+/* --- تنظیمات کلی و چیدمان اصلی --- */
 * { box-sizing: border-box; }
 
 body {
@@ -56,15 +57,23 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
     margin: 0;
     text-align: right;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 main {
     max-width: 600px;
-    margin: 1rem auto;
-    padding: 0 1rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* --- هدر و بنر پرچم --- */
+/* --- هدر --- */
 .main-header { padding-top: 1.5rem; }
 
 .iran-flag-banner {
@@ -72,7 +81,7 @@ main {
     border-radius: 12px;
     background: linear-gradient(90deg, var(--iran-green) 0%, var(--iran-white) 50%, var(--iran-red) 100%);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    margin: 0 1rem 2rem 1rem;
+    margin: 0 1rem 1.5rem 1rem;
     text-align: center;
 }
 .iran-flag-banner h1 {
@@ -87,20 +96,10 @@ body.dark-theme .iran-flag-banner { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
 .header-content {
     position: relative;
     text-align: center;
-    padding: 1rem 0 2rem 0;
+    padding: 1rem 0;
 }
-.title-container h2 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin: 0;
-    color: var(--text-color);
-}
-.title-container h3 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin: 0 0 10px 0;
-    color: var(--primary-color);
-}
+.title-container h2 { font-size: 2rem; font-weight: 800; margin: 0; color: var(--text-color); }
+.title-container h3 { font-size: 1.5rem; font-weight: 500; margin: 0 0 10px 0; color: var(--primary-color); }
 .subtitle { font-size: 1rem; margin: 0; }
 
 /* --- دکمه‌های ناوبری --- */
@@ -108,7 +107,7 @@ body.dark-theme .iran-flag-banner { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 25px 20px;
-    margin-bottom: 2.5rem;
+    margin-top: 2rem;
 }
 .nav-btn {
     background: var(--card-bg);
@@ -122,88 +121,28 @@ body.dark-theme .iran-flag-banner { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
     cursor: pointer;
     transition: all 0.2s ease-out;
     box-shadow: 7px 7px 15px var(--shadow-2), -7px -7px 15px var(--shadow-1);
+    min-height: 60px;
 }
-.nav-btn:hover {
+.nav-btn:hover:not(:disabled) {
     color: var(--primary-color);
     box-shadow: 4px 4px 10px var(--shadow-2), -4px -4px 10px var(--shadow-1);
 }
-.nav-btn.active {
+.nav-btn:disabled {
+    cursor: wait;
     color: var(--primary-color);
     box-shadow: inset 7px 7px 15px var(--shadow-2), inset -7px -7px 15px var(--shadow-1);
 }
-
-/* --- دکمه کپی همه --- */
-.actions-container {
-    text-align: center;
-    margin-bottom: 1.5rem;
+.nav-btn.copied {
+    color: var(--success-color);
+    box-shadow: inset 7px 7px 15px var(--shadow-2), inset -7px -7px 15px var(--shadow-1);
 }
-#copy-all-btn {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: var(--card-bg);
-    color: var(--text-color);
-    border: none;
-    padding: 12px 25px;
-    font-family: 'Vazirmatn', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s ease-out;
-    box-shadow: 5px 5px 12px var(--shadow-2), -5px -5px 12px var(--shadow-1);
-    margin: 0 auto;
-}
-#copy-all-btn:hover { color: var(--primary-color); }
-#copy-all-btn.copied {
-    color: var(--iran-green);
-    box-shadow: inset 5px 5px 12px var(--shadow-2), inset -5px -5px 12px var(--shadow-1);
-}
-
-/* --- بخش کانفیگ‌ها --- */
-.configs-section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-.config-item {
-    display: flex;
-    align-items: center;
-    background: var(--card-bg);
-    padding: 12px 15px;
-    border-radius: 8px;
-    box-shadow: 4px 4px 8px var(--shadow-2), -4px -4px 8px var(--shadow-1);
-    direction: ltr;
-}
-.config-text {
-    flex-grow: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-right: 15px;
-    font-size: 0.9rem;
-}
-.copy-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    font-family: 'Vazirmatn', sans-serif;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    flex-shrink: 0;
-}
-body.dark-theme .copy-btn:hover { background-color: #3a9dff; }
-.copy-btn:hover { background-color: #0056b3; }
-.copy-btn.copied { background-color: var(--iran-green); }
 
 /* --- پیام‌ها و لودینگ --- */
 #message-area {
     text-align: center;
     padding: 1rem;
-    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+    min-height: 50px;
     font-weight: 500;
 }
 .loading-spinner {
@@ -213,15 +152,13 @@ body.dark-theme .copy-btn:hover { background-color: #3a9dff; }
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
-    margin: 3rem auto;
+    margin: 2rem auto;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
 
-/* --- استایل جدید فوتر --- */
+/* --- فوتر --- */
 .main-footer {
     text-align: center;
-    margin-top: 5rem;
-    padding: 3rem 1rem;
+    padding: 2rem 1rem 1.5rem 1rem;
 }
 .footer-content {
     background: var(--card-bg);
@@ -250,26 +187,15 @@ body.dark-theme .copy-btn:hover { background-color: #3a9dff; }
     font-size: 1.1rem;
     transition: color 0.3s ease;
 }
-.instagram-link:hover .instagram-username { color: #c13584; } /* رنگ صورتی اینستاگرام */
+.instagram-link:hover .instagram-username { color: #c13584; }
 .instagram-logo { width: 28px; height: 28px; }
 
 /* --- سوییچ تم --- */
-.theme-switcher-container {
-    position: absolute;
-    top: 0;
-    left: 1rem;
-}
-.theme-switcher {
-    position: relative;
-    display: inline-block;
-    width: 34px;
-    height: 34px;
-}
+.theme-switcher-container { position: absolute; top: 0; left: 1rem; }
+.theme-switcher { position: relative; display: inline-block; width: 34px; height: 34px; }
 .theme-switcher input { opacity: 0; width: 0; height: 0; }
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
     background-color: var(--bg-color);
     transition: .4s;
     border-radius: 50%;
@@ -287,8 +213,6 @@ body.dark-theme .slider:before { content: "☀️"; }
 @media (max-width: 600px) {
     .title-container h2 { font-size: 1.8rem; }
     .title-container h3 { font-size: 1.3rem; }
-    .sub-nav { gap: 20px 15px; }
-    .nav-btn { padding: 15px; }
     .iran-flag-banner h1 { font-size: 1.3rem; }
     .footer-content { padding: 1rem 1.5rem; }
 }
