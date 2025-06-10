@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const menuButtons = document.querySelectorAll('.menu-btn');
     const configListContainer = document.getElementById('config-list-container');
-    const testConfigsBtn = document.getElementById('test-configs-btn');
     const copyAllBtn = document.getElementById('copy-all-btn');
     const loader = document.getElementById('loader');
     const statusMessage = document.getElementById('status-message');
@@ -11,17 +10,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- State ---
     let activeBtn = null;
     let currentConfigs = [];
+
+    // *** CRITICAL FIX: Using jsDelivr CDN to fetch directly from GitHub without CORS issues ***
     const subLinks = {
-        mix: 'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/mix/sub.html',
-        vless: 'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html',
-        vmess: 'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vmess.html',
-        trojan: 'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html',
-        ss: 'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html',
-        hy2: 'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/hy2.html'
+        mix: 'https://cdn.jsdelivr.net/gh/arshiacomplus/v2rayExtractor@main/mix/sub.html',
+        vless: 'https://cdn.jsdelivr.net/gh/arshiacomplus/v2rayExtractor@main/vless.html',
+        vmess: 'https://cdn.jsdelivr.net/gh/arshiacomplus/v2rayExtractor@main/vmess.html',
+        trojan: 'https://cdn.jsdelivr.net/gh/arshiacomplus/v2rayExtractor@main/trojan.html',
+        ss: 'https://cdn.jsdelivr.net/gh/arshiacomplus/v2rayExtractor@main/ss.html',
+        hy2: 'https://cdn.jsdelivr.net/gh/arshiacomplus/v2rayExtractor@main/hy2.html'
     };
 
     // --- Theme Switcher ---
-    const currentTheme = localStorage.getItem('theme') || 'dark';
+    // Set default theme to light
+    const currentTheme = localStorage.getItem('theme') || 'light';
     document.body.dataset.theme = currentTheme;
     themeToggle.innerHTML = currentTheme === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
 
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Core Logic ---
     function showStatus(message, type = 'error') {
         statusMessage.textContent = message;
-        statusMessage.className = type;
+        statusMessage.className = `status-${type}`;
         statusMessage.style.display = 'block';
     }
 
@@ -45,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateActionButtonsState() {
         const hasConfigs = currentConfigs.length > 0;
-        testConfigsBtn.disabled = !hasConfigs;
         copyAllBtn.disabled = !hasConfigs;
     }
 
@@ -73,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateActionButtonsState();
 
         try {
-            const proxyUrl = 'https://api.cors.lol/raw?url=';
-            const response = await fetch(proxyUrl + encodeURIComponent(url));
+            // ** NO PROXY NEEDED ANYMORE **
+            const response = await fetch(url);
             
             if (!response.ok) {
                 throw new Error(`خطا در شبکه: سرور پاسخی با کد ${response.status} برگرداند.`);
@@ -82,8 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const rawContent = await response.text();
             
-            if (rawContent.includes('<html')) {
-                 throw new Error("محتوای دریافت شده یک فایل HTML است، نه رشته Base64.");
+            if (!rawContent || rawContent.includes('<html')) {
+                 throw new Error("فایل دریافت شده خالی است یا فرمت درستی ندارد.");
             }
             
             let decodedContent;
@@ -91,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 decodedContent = atob(rawContent.trim());
             } catch (e) {
                 console.error("atob error:", e);
-                throw new Error("خطای atob: رشته دریافت شده به فرمت صحیح Base64 نیست.");
+                throw new Error("خطای atob: رشته دریافت شده به فرمت صحیح Base64 نیست. این معمولا به معنی مشکل در لینک ساب اصلی است.");
             }
 
             const configs = decodedContent.split(/\r?\n/).filter(Boolean);
@@ -126,9 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
         configs.forEach(config => {
             const item = document.createElement('div');
             item.className = 'config-item';
+            // Simplified item, removed latency display
             item.innerHTML = `
                 <span class="config-name">${config.name}</span>
-                <span class="config-latency" id="latency-${config.name}">- ms</span>
                 <div class="config-actions">
                     <button class="copy-single-btn" title="کپی کردن کانفیگ" data-config-value="${config.value}"><i class="fa-solid fa-paste"></i></button>
                 </div>
@@ -158,62 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // --- Latency Test Logic ---
-    async function getLatency(address) {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
-
-        const startTime = performance.now();
-        try {
-            await fetch(`https://api.cors.lol/raw?url=https://${address}/cdn-cgi/trace`, { signal: controller.signal, method: 'HEAD' });
-            const endTime = performance.now();
-            return Math.round(endTime - startTime);
-        } catch (error) {
-            return -1;
-        } finally {
-            clearTimeout(timeoutId);
-        }
-    }
-
-    testConfigsBtn.addEventListener('click', async () => {
-        testConfigsBtn.disabled = true;
-        const promises = currentConfigs.map(async (config) => {
-            const latencyEl = document.getElementById(`latency-${config.name}`);
-            if (!latencyEl) return;
-            
-            latencyEl.textContent = '...';
-            latencyEl.className = 'config-latency testing';
-
-            let address = '';
-            try {
-                const urlPart = config.value.split('://')[1];
-                const atIndex = urlPart.indexOf('@');
-                address = urlPart.substring(atIndex + 1).split(/[:?#]/)[0];
-            } catch (e) { /* Parsing failed */ }
-            
-            if (!address) {
-                 latencyEl.textContent = 'نامعتبر';
-                 latencyEl.className = 'config-latency slow';
-                 return;
-            }
-
-            const latency = await getLatency(address);
-            
-            if (latency === -1) {
-                latencyEl.textContent = 'Timeout';
-                latencyEl.className = 'config-latency slow';
-            } else {
-                latencyEl.textContent = `${latency} ms`;
-                if (latency < 350) latencyEl.className = 'config-latency fast';
-                else if (latency < 800) latencyEl.className = 'config-latency medium';
-                else latencyEl.className = 'config-latency slow';
-            }
-        });
-
-        await Promise.all(promises);
-        testConfigsBtn.disabled = false;
-    });
 
     // --- Copy All Logic ---
     copyAllBtn.addEventListener('click', () => {
