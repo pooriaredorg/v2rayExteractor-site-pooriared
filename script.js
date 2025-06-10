@@ -1,21 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- انتخاب عناصر DOM ---
     const navButtons = document.querySelectorAll('.nav-btn');
-    const configsContainer = document.getElementById('configs-container');
-    const loadingSpinner = document.getElementById('loading');
     const messageArea = document.getElementById('message-area');
-    const copyAllButton = document.getElementById('copy-all-btn');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     
-    // پراکسی جدید و قابل اعتمادتر
-    const CORS_PROXY = 'https://proxy.cors.sh/';
+    // پراکسی جدید و پایدار
+    const CORS_PROXY = 'https://api.codetabs.com/v1/proxy?quest=';
     
-    let activeBtn = null;
-    let lastFetchedBase64 = '';
-
-    // --- مدیریت تم (روشن/تاریک) ---
+    // --- مدیریت تم ---
     const applyTheme = (theme) => {
         body.classList.toggle('dark-theme', theme === 'dark');
         themeToggle.checked = (theme === 'dark');
@@ -30,126 +23,90 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     applyTheme(savedTheme);
 
-    // --- نمایش پیام خطا ---
+    // --- نمایش پیام به کاربر ---
     function showMessage(text, isError = true) {
-        messageArea.innerHTML = `<p style="color: ${isError ? 'var(--iran-red)' : 'var(--text-color)'};">${text}</p>`;
+        messageArea.innerHTML = `<p style="color: ${isError ? 'var(--iran-red)' : 'var(--success-color)'}; font-weight: bold;">${text}</p>`;
     }
 
-    // --- افزودن Event Listener به دکمه‌های منو ---
+    // --- افزودن Event Listener به دکمه‌ها ---
     navButtons.forEach(button => {
+        const originalText = button.textContent;
         button.addEventListener('click', () => {
-            if (activeBtn) {
-                activeBtn.classList.remove('active');
-            }
-            button.classList.add('active');
-            activeBtn = button;
-            fetchAndDisplayConfigs(button.dataset.url);
+            processAndCopySubscription(button, originalText);
         });
     });
 
-    // --- تابع اصلی برای دریافت و نمایش کانفیگ‌ها ---
-    async function fetchAndDisplayConfigs(url) {
-        configsContainer.innerHTML = '';
-        messageArea.innerHTML = '';
-        copyAllButton.style.display = 'none';
-        lastFetchedBase64 = '';
-        loadingSpinner.style.display = 'block';
-
-        let response;
-        try {
-            response = await fetch(CORS_PROXY + url, {
-                headers: {
-                  // کلید موقت برای استفاده از پراکسی
-                  'x-cors-api-key': 'temp_8314648e815d4893a749914755a5933d'
-                }
-            });
-            if (!response.ok) {
-                throw new Error(`خطای شبکه یا پراکسی: ${response.status}`);
+    // --- تابع اصلی برای پردازش و کپی لینک ساب ---
+    async function processAndCopySubscription(button, originalText) {
+        // غیرفعال کردن همه دکمه‌ها و نمایش حالت لودینگ
+        navButtons.forEach(btn => {
+            btn.disabled = true;
+            if (btn === button) {
+                btn.textContent = 'در حال آماده‌سازی...';
             }
+        });
+        messageArea.innerHTML = '';
+        
+        const url = button.dataset.url;
+        let base64Data;
+        
+        // مرحله ۱: دریافت اطلاعات
+        try {
+            const response = await fetch(CORS_PROXY + url);
+            if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+            base64Data = (await response.text()).trim();
+            if (!base64Data) throw new Error("پاسخ دریافتی از لینک ساب خالی است.");
         } catch (error) {
             console.error('Fetch Error:', error);
-            showMessage("متاسفانه در دریافت کانفیگ‌ها مشکلی پیش آمد. لطفا از اتصال اینترنت و عملکرد صحیح پراکسی اطمینان حاصل کنید و دوباره تلاش کنید.");
-            loadingSpinner.style.display = 'none';
+            showMessage("خطا در دریافت اطلاعات. لطفا از اتصال اینترنت خود مطمئن شوید و دوباره تلاش کنید.");
+            resetButtons();
             return;
         }
 
+        // مرحله ۲: پردازش و شخصی‌سازی
         try {
-            const base64Data = (await response.text()).trim();
-            if (!base64Data) {
-                throw new Error("پاسخ دریافتی از لینک ساب خالی است.");
-            }
-            lastFetchedBase64 = base64Data;
-            copyAllButton.style.display = 'inline-flex';
-            
             const decodedData = atob(base64Data);
             const configs = decodedData.split(/\r?\n/).filter(line => line.trim() !== '');
             
-            if (configs.length === 0) {
-                 showMessage("کانفیگی در این لینک یافت نشد.", false);
-            } else {
-                processAndRenderConfigs(configs);
-            }
+            const personalizedConfigs = configs.map((config, index) => {
+                const newName = `pooriared${index + 1}`;
+                return config.includes('#') 
+                    ? config.substring(0, config.indexOf('#') + 1) + newName 
+                    : `${config}#${newName}`;
+            });
+            
+            const newSubContent = personalizedConfigs.join('\n');
+            const newSubBase64 = btoa(newSubContent);
+
+            // مرحله ۳: کپی در کلیپ‌بورد
+            await navigator.clipboard.writeText(newSubBase64);
+            
+            button.classList.add('copied');
+            button.textContent = 'کپی شد!';
+            showMessage('لینک ساب جدید با موفقیت کپی شد!', false);
 
         } catch (error) {
-            console.error('Decode Error:', error);
-            showMessage("محتوای لینک ساب دریافت شد اما فرمت آن صحیح (Base64) نیست. این معمولا به معنی مشکل در لینک ساب اصلی است.");
-        } finally {
-            loadingSpinner.style.display = 'none';
+            console.error('Processing/Copying Error:', error);
+            showMessage("خطا در پردازش یا کپی. ممکن است محتوای لینک ساب استاندارد نباشد.");
         }
-    }
 
-    // --- تابع برای پردازش و رندر کردن کانفیگ‌ها ---
-    function processAndRenderConfigs(configs) {
-        configs.forEach((config, index) => {
-            const personalizedConfig = personalizeConfigName(config, index + 1);
-            const configElement = document.createElement('div');
-            configElement.className = 'config-item';
-            configElement.innerHTML = `
-                <span class="config-text">${personalizedConfig}</span>
-                <button class="copy-btn">کپی</button>
-            `;
-            configsContainer.appendChild(configElement);
-        });
-    }
-
-    // --- تابع برای تغییر نام کانفیگ‌ها ---
-    function personalizeConfigName(config, number) {
-        const newName = `pooriared${number}`;
-        return config.includes('#') ? config.substring(0, config.indexOf('#') + 1) + newName : `${config}#${newName}`;
+        // مرحله ۴: بازگرداندن دکمه‌ها به حالت اولیه
+        setTimeout(() => {
+            resetButtons();
+            button.classList.remove('copied');
+        }, 2500);
     }
     
-    // --- مدیریت رویدادهای کپی ---
-    function handleCopy(button, textToCopy, originalText) {
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            const textSpan = button.querySelector('span');
-            if (textSpan) textSpan.textContent = 'کپی شد!';
-            else button.textContent = 'کپی شد!';
-            button.classList.add('copied');
-            
-            setTimeout(() => {
-                if (textSpan) textSpan.textContent = originalText;
-                else button.textContent = originalText;
-                button.classList.remove('copied');
-            }, 2000);
-        }).catch(err => {
-            console.error('Error copying:', err);
-            const textSpan = button.querySelector('span');
-            if (textSpan) textSpan.textContent = 'خطا!';
-            else button.textContent = 'خطا!';
+    function resetButtons() {
+        navButtons.forEach(btn => {
+            btn.disabled = false;
+            // پیدا کردن متن اصلی دکمه از یک منبع ثابت یا بازنویسی آن
+            const buttonType = btn.getAttribute('data-url').match(/([^/]+)\.html/);
+            if (buttonType && buttonType[1] === 'sub') {
+                 btn.textContent = "MIX";
+            } else if (buttonType) {
+                 btn.textContent = buttonType[1].toUpperCase();
+            }
         });
     }
-
-    configsContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('copy-btn')) {
-            const button = e.target;
-            const configText = button.closest('.config-item').querySelector('.config-text').textContent;
-            handleCopy(button, configText, 'کپی');
-        }
-    });
-
-    copyAllButton.addEventListener('click', () => {
-        if(lastFetchedBase64) {
-            handleCopy(copyAllButton, lastFetchedBase64, 'کپی همه (Base64)');
-        }
-    });
 });
