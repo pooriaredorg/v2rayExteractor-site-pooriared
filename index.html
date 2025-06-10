@@ -3,56 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V2Ray Extractor Ultimate</title>
+    <title>V2Ray Extractor - PooriaRed</title>
+    <meta name="description" content="استخراج و شخصی‌سازی کانفیگ‌های V2Ray با نام‌های اختصاصی">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
-<body data-theme="light"> <div class="background-animation"></div>
+<body>
 
-    <div class="container">
-        
-        <div class="freedom-banner">
-            <p>به امید ایرانی آزاد</p>
-        </div>
-
-        <header>
-            <div class="iran-flag-bar"></div>
-            <h1>V2Ray Extractor Ultimate</h1>
-            <p>استخراج و شخصی‌سازی کانفیگ‌های V2Ray</p>
-            <button id="theme-toggle" title="تغییر تم">
-                <i class="fa-solid fa-sun"></i>
-            </button>
-        </header>
-
-        <nav class="menu">
-            <div class="btn-wrapper"><button class="menu-btn" data-type="mix">MIX</button></div>
-            <div class="btn-wrapper"><button class="menu-btn" data-type="vless">VLESS</button></div>
-            <div class="btn-wrapper"><button class="menu-btn" data-type="vmess">VMESS</button></div>
-            <div class="btn-wrapper"><button class="menu-btn" data-type="trojan">TROJAN</button></div>
-            <div class="btn-wrapper"><button class="menu-btn" data-type="ss">SS</button></div>
-            <div class="btn-wrapper"><button class="menu-btn" data-type="hy2">HY2</button></div>
-        </nav>
-
-        <main>
-            <div class="main-actions">
-                <button id="copy-all-btn" class="action-btn" disabled><i class="fa-solid fa-copy"></i> کپی همه (Base64)</button>
-            </div>
-            <div id="loader" class="loader" style="display: none;"></div>
-            <div id="status-message"></div>
-            <div id="config-list-container">
-                </div>
-        </main>
-
-        <footer>
-            <p>طراح سایت: پوریا عبدالله نژاد</p>
-            <a href="https://www.instagram.com/pooria_abdollahnezhad" target="_blank">
-                <i class="fab fa-instagram"></i> pooria_abdollahnezhad
-            </a>
-        </footer>
+    <div class="theme-switcher-container">
+        <label class="theme-switcher">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sun-fill" viewBox="0 0 16 16">
+                    <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-fill" viewBox="0 0 16 16">
+                    <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+                </svg>
+            </span>
+        </label>
     </div>
+
+    <header class="main-header">
+        <div class="header-banner">
+            <h1 class="header-title">به امید ایرانی آزاد</h1>
+        </div>
+    </header>
+
+    <main>
+        <nav class="sub-nav">
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/mix/sub.html">MIX</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html">VLESS</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vmess.html">VMESS</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html">TROJAN</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html">SHADOWSOCKS</button>
+            <button class="nav-btn" data-url="https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/hy2.html">HYSTERIA2</button>
+        </nav>
+        
+        <div id="loading" class="loading-spinner" style="display: none;"></div>
+
+        <section id="configs-container" class="configs-section"></section>
+    </main>
+
+    <footer class="main-footer">
+        <p>طراح سایت: پوریا عبدالله نژاد</p>
+        <a href="https://www.instagram.com/pooria_abdollahnezhad" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.703.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.282.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.231s.008-2.389.046-3.232c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.884a1.152 1.152 0 1 0 0 2.304 1.152 1.152 0 0 0 0-2.304zM8 4.884c-1.727 0-3.116 1.389-3.116 3.116s1.389 3.116 3.116 3.116 3.116-1.389 3.116-3.116c0-1.727-1.389-3.116-3.116-3.116zm0 5.228c-1.166 0-2.112-.946-2.112-2.112s.946-2.112 2.112-2.112 2.112.946 2.112 2.112-.946 2.112-2.112 2.112z"/>
+            </svg>
+            @pooria_abdollahnezhad
+        </a>
+    </footer>
 
     <script src="script.js"></script>
 </body>
